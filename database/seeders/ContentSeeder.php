@@ -12,7 +12,28 @@ class ContentSeeder extends Seeder
      */
     public function run(): void
     {
-        $contents = [
+        foreach (self::fallbackContents() as $content) {
+            Content::query()->updateOrCreate(
+                [
+                    'type' => $content['type'],
+                    'body' => $content['body'],
+                    'source' => $content['source'],
+                ],
+                [
+                    'is_approved' => true,
+                ],
+            );
+        }
+    }
+
+    /**
+     * Return the built-in content used when the database is unavailable.
+     *
+     * @return array<int, array{type: string, body: string, source: ?string}>
+     */
+    public static function fallbackContents(): array
+    {
+        return [
             [
                 'type' => 'ayet',
                 'body' => 'Kalpler ancak Allah\'ı anmakla huzur bulur.',
@@ -164,18 +185,5 @@ class ContentSeeder extends Seeder
                 'source' => null,
             ],
         ];
-
-        foreach ($contents as $content) {
-            Content::query()->updateOrCreate(
-                [
-                    'type' => $content['type'],
-                    'body' => $content['body'],
-                    'source' => $content['source'],
-                ],
-                [
-                    'is_approved' => true,
-                ],
-            );
-        }
     }
 }
