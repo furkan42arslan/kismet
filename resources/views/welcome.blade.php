@@ -7,7 +7,7 @@
     <title>Kısmet — Bir Tık İlham, Bir Tık Hikmet</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#9333ea">
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="manifest" href="/manifest.json">
 
     <!-- Google Fonts & FontAwesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
