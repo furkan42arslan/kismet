@@ -129,10 +129,17 @@
             </div>
         </div>
 
-        <!-- Tema Değiştirme Butonu -->
-        <button id="themeToggle" onclick="toggleTheme()" class="p-2.5 rounded-xl glass-card text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all">
-            <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
-        </button>
+        <div class="flex items-center gap-2">
+            <button type="button" id="install-pwa-btn" class="hidden items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 px-3 py-2 text-xs font-bold text-white shadow-lg shadow-purple-500/20 transition hover:from-purple-500 hover:to-pink-400" aria-label="Uygulamayı yükle">
+                <i class="fa-solid fa-download"></i>
+                <span class="hidden sm:inline">Uygulamayı Yükle</span>
+            </button>
+
+            <!-- Tema Değiştirme Butonu -->
+            <button id="themeToggle" onclick="toggleTheme()" class="p-2.5 rounded-xl glass-card text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all">
+                <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
+            </button>
+        </div>
     </header>
 
     <!-- Ana İçerik Alanı -->
@@ -597,6 +604,7 @@
             nasipCek();
             setupCategoryBarInteractions();
             updateFavoritesCount();
+            document.getElementById('install-pwa-btn')?.addEventListener('click', installApp);
 
             document.addEventListener('keydown', event => {
                 if (event.key === 'Escape') {
@@ -874,11 +882,15 @@
 
         function showInstallBanner() {
             const installBanner = document.getElementById('installBanner');
+            const installButton = document.getElementById('install-pwa-btn');
 
             if (installBanner) {
                 installBanner.classList.remove('hidden');
                 installBanner.classList.add('flex');
             }
+
+            installButton?.classList.remove('hidden');
+            installButton?.classList.add('flex');
         }
 
         function isMobileDevice() {
@@ -891,11 +903,15 @@
 
         function dismissInstallBanner() {
             const installBanner = document.getElementById('installBanner');
+            const installButton = document.getElementById('install-pwa-btn');
 
             if (installBanner) {
                 installBanner.classList.add('hidden');
                 installBanner.classList.remove('flex');
             }
+
+            installButton?.classList.add('hidden');
+            installButton?.classList.remove('flex');
 
             localStorage.setItem('kismetInstallDismissed', 'true');
         }
