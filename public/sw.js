@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kismet-shell-v2';
+const CACHE_NAME = 'kismet-v3';
 const APP_SHELL = [
     '/',
     '/manifest.json',
