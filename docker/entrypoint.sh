@@ -18,6 +18,7 @@ if [ ! -f "$APP_ROOT/database/database.sqlite" ]; then
     touch "$APP_ROOT/database/database.sqlite"
 fi
 
+chmod 777 "$APP_ROOT/database/database.sqlite"
 chown -R www-data:www-data "$APP_ROOT/storage" "$APP_ROOT/database"
 
 php artisan migrate --force
