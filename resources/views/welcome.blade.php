@@ -291,8 +291,64 @@
         let currentContent = null;
         let deferredInstallPrompt = null;
         const favoritesStorageKey = 'kismetFavorites';
-        const randomContentUrl = "{{ route('content.random') }}";
-        const dailyContentUrl = "{{ route('content.daily') }}";
+        const randomContentUrl = "{{ route('content.random', [], false) }}";
+        const dailyContentUrl = "{{ route('content.daily', [], false) }}";
+        const inlineFallbackContents = [{
+                id: 'inline-ayet-1',
+                type: 'ayet',
+                body: 'Kalpler ancak Allah\'ı anmakla huzur bulur.',
+                source: 'Ra\'d Suresi, 28. ayet',
+                is_approved: true,
+            },
+            {
+                id: 'inline-hadis-1',
+                type: 'hadis',
+                body: 'Ameller niyetlere göredir; herkes için niyet ettiği vardır.',
+                source: 'Buhari, Bedü\'l-Vahy, 1; Müslim, İmare, 155',
+                is_approved: true,
+            },
+            {
+                id: 'inline-soz-1',
+                type: 'soz',
+                body: 'Kendini bilmek, bütün bilgeliğin başlangıcıdır.',
+                source: 'Sokrates',
+                is_approved: true,
+            },
+        ];
+
+        function getInlineFallbackContent(type = '') {
+            const candidates = type ?
+                inlineFallbackContents.filter(content => content.type === type) :
+                inlineFallbackContents;
+
+            return candidates[Math.floor(Math.random() * candidates.length)] || inlineFallbackContents[0];
+        }
+
+        async function parseApiResponse(response) {
+            const responseBody = await response.text();
+
+            if (!response.ok) {
+                console.error('İçerik API isteği başarısız oldu.', {
+                    url: response.url,
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: responseBody,
+                });
+                throw new Error(`API ${response.status}: ${response.statusText}`);
+            }
+
+            try {
+                return JSON.parse(responseBody);
+            } catch (error) {
+                console.error('İçerik API geçerli JSON döndürmedi.', {
+                    url: response.url,
+                    status: response.status,
+                    body: responseBody,
+                    error,
+                });
+                throw error;
+            }
+        }
 
         function setCategory(cat) {
             currentCategory = cat;
@@ -473,17 +529,20 @@
 
             const type = currentCategory === 'all' ? '' : currentCategory;
             fetch(`${randomContentUrl}?type=${encodeURIComponent(type)}`)
-                .then(res => res.json())
+                .then(parseApiResponse)
                 .then(res => {
                     if (res.success) {
                         renderCardData(res.data);
                     } else {
+                        console.error('İçerik API başarısız yanıt döndürdü.', res);
+                        renderCardData(getInlineFallbackContent(type));
                         showToast(res.message || 'Bir sorun oluştu.');
                     }
                 })
                 .catch(err => {
-                    showToast('Veri alınırken hata oluştu.');
-                    console.error(err);
+                    console.error('Rastgele içerik alınırken hata oluştu.', err);
+                    renderCardData(getInlineFallbackContent(type));
+                    showToast('Bağlantı sorunu. Yedek içerik gösteriliyor.');
                 })
                 .finally(() => {
                     btn.disabled = false;
@@ -506,17 +565,20 @@
             }
 
             fetch(dailyContentUrl)
-                .then(res => res.json())
+                .then(parseApiResponse)
                 .then(res => {
                     if (res.success) {
                         renderCardData(res.data, 'Günün Nasibi');
                     } else {
+                        console.error('Günün içeriği API başarısız yanıt döndürdü.', res);
+                        renderCardData(getInlineFallbackContent(), 'Günün Nasibi');
                         showToast(res.message || 'Günün nasibi bulunamadı.');
                     }
                 })
                 .catch(err => {
-                    showToast('Günün nasibi alınırken hata oluştu.');
-                    console.error(err);
+                    console.error('Günün nasibi alınırken hata oluştu.', err);
+                    renderCardData(getInlineFallbackContent(), 'Günün Nasibi');
+                    showToast('Bağlantı sorunu. Yedek içerik gösteriliyor.');
                 })
                 .finally(() => {
                     if (btn) {
