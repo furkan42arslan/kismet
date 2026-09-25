@@ -1,0 +1,12 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "name": "Kısmet — Bir Tık İlham",
+    "short_name": "Kısmet",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#9333ea",
+    "lang": "tr",
+    "description": "Her gün bir ayet, hadis, hikmetli söz ve ilham.",
+    "icons": []
+}
