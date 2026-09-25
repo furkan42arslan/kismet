@@ -271,10 +271,10 @@
             <i class="fa-solid fa-mobile-screen-button"></i>
         </div>
         <div class="min-w-0 flex-1">
-            <p class="text-sm font-semibold">Kısmet'i Ana Ekrana Yükle</p>
+            <p class="text-sm font-semibold">Uygulamayı Yükle</p>
             <p class="mt-0.5 text-xs text-slate-400">İlhamına her an daha hızlı ulaş.</p>
         </div>
-        <button type="button" onclick="installApp()" class="flex-shrink-0 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 px-3 py-2 text-xs font-bold text-white transition hover:from-purple-500 hover:to-pink-400">Yükle</button>
+        <button type="button" id="installAppBtn" onclick="installApp()" class="flex-shrink-0 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 px-3 py-2 text-xs font-bold text-white transition hover:from-purple-500 hover:to-pink-400">Uygulamayı Yükle</button>
         <button type="button" onclick="dismissInstallBanner()" aria-label="Yükleme bildirimini kapat" class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -613,7 +613,7 @@
                 }
             });
 
-            if (isMobileDevice() && !isStandaloneApp() && localStorage.getItem('kismetInstallDismissed') !== 'true') {
+            if (!isStandaloneApp() && localStorage.getItem('kismetInstallDismissed') !== 'true') {
                 window.setTimeout(showInstallBanner, 1200);
             }
 
